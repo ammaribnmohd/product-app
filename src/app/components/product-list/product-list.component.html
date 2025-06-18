@@ -1,0 +1,15 @@
+<div class="container mt-3">
+  <h2>Product List</h2>
+  <a routerLink="/create" class="btn btn-primary mb-2">Create Product</a>
+
+  @for (product of products; track product.id) {
+    <div class="card mb-2">
+      <div class="card-body">
+        <h5>{{ product.title }} - ${{ product.price }}</h5>
+        <p>{{ product.description }}</p>
+        <a [routerLink]="['/products', product.id]" class="btn btn-info btn-sm">Details</a>
+        <a [routerLink]="['/edit', product.id]" class="btn btn-warning btn-sm mx-1">Edit</a>
+      </div>
+    </div>
+  }
+</div>

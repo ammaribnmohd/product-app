@@ -1,0 +1,10 @@
+<div class="container mt-3" *ngIf="product">
+    <button class="btn btn-secondary mb-3" (click)="goBack()">← Back</button>
+    <h2>{{ product.title }}</h2>
+    <p><strong>Price:</strong> ${{ product.price }}</p>
+    <p><strong>Description:</strong> {{ product.description }}</p>
+
+    @for (img of product.images; track img) {
+    <img [src]="img" class="img-thumbnail m-1" width="150">
+    }
+</div>
