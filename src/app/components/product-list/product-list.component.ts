@@ -20,4 +20,18 @@ export class ProductListComponent implements OnInit {
       this.products = data;
     });
   }
+  deleteProduct(id: number): void {
+    if (confirm('Are you sure you want to delete this product?')) {
+      this.productService.delete(id).subscribe({
+        next: () => {
+          this.products = this.products.filter(product => product.id !== id);
+          alert(`Product with id ${id} deleted successfully.`);
+        },
+        error: (err) => {
+          console.error(`Error deleting product with id ${id}`, err);
+          alert('Failed to delete product.');
+        }
+      });
+    }
+  }
 }

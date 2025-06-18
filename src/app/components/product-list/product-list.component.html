@@ -9,6 +9,7 @@
         <p>{{ product.description }}</p>
         <a [routerLink]="['/products', product.id]" class="btn btn-info btn-sm">Details</a>
         <a [routerLink]="['/edit', product.id]" class="btn btn-warning btn-sm mx-1">Edit</a>
+        <button class="btn btn-danger btn-sm" (click)="deleteProduct(product.id)">Delete</button>
       </div>
     </div>
   }
