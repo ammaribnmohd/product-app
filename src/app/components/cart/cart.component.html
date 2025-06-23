@@ -1,0 +1,44 @@
+<div class="container mt-3">
+  <h2>My Cart</h2>
+
+  <ng-container *ngIf="(items$ | async) as items">
+    <div *ngIf="items.length === 0; else cartItems">
+      <p>Your cart is empty.</p>
+      <a routerLink="/" class="btn btn-primary">Go Shopping</a>
+    </div>
+
+    <ng-template #cartItems>
+      <div class="card mb-3" *ngFor="let item of items">
+        <div class="card-body d-flex justify-content-between align-items-center">
+          <div>
+            <h5 class="card-title">{{ item.title }}</h5>
+            <p class="card-text">${{ item.price }}</p>
+          </div>
+          <img [src]="item.images[0]" class="img-thumbnail" width="100" [alt]="item.title">
+        </div>
+      </div>
+
+      <hr>
+
+      <h3>Checkout</h3>
+      <form [formGroup]="checkoutForm" (ngSubmit)="placeOrder()">
+        <div class="mb-3">
+          <label class="form-label"><strong>Select Payment Method</strong></label>
+          <div class="form-check">
+            <input type="radio" id="creditCard" formControlName="paymentMethod" value="credit" class="form-check-input">
+            <label for="creditCard" class="form-check-label">Credit Card</label>
+          </div>
+          <div class="form-check">
+            <input type="radio" id="paypal" formControlName="paymentMethod" value="paypal" class="form-check-input">
+            <label for="paypal" class="form-check-label">PayPal</label>
+          </div>
+          <div class="form-check">
+            <input type="radio" id="cod" formControlName="paymentMethod" value="cod" class="form-check-input">
+            <label for="cod" class="form-check-label">Cash on Delivery</label>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-success" [disabled]="checkoutForm.invalid">Place Order</button>
+      </form>
+    </ng-template>
+  </ng-container>
+</div>

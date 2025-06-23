@@ -2,59 +2,69 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ProductService } from '../../services/product.service';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NavigationHomeService } from '../../services/navigationhome.service';
 
 @Component({
   selector: 'app-product-form',
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './product-form.component.html',
   styleUrl: './product-form.component.scss',
 })
 export class ProductFormComponent implements OnInit {
   isEdit = false;
   productId: number | null = null;
-  product: any = {
-    title: '',
-    price: null,
-    description: '',
-    categoryId: null,
-    images: [''],
-  };
+  productForm: FormGroup;
 
   constructor(
     private productService: ProductService,
     private route: ActivatedRoute,
     private router: Router,
-    private navigationhome: NavigationHomeService
-  ) {}
+    private navigationhome: NavigationHomeService,
+    private fb: FormBuilder
+  ) {
+    this.productForm = this.fb.group({
+      title: ['', [Validators.required]],
+      price: [null, [Validators.required, Validators.min(0)]],
+      description: ['', [Validators.required]],
+      categoryId: [null, [Validators.required]],
+      image: ['', [Validators.required, Validators.pattern('https?://.+')]]
+    });
+  }
+
   goBack() {
     this.navigationhome.goBack();
   }
-  ngOnInit() {
+
+  ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       this.isEdit = true;
       this.productId = +id;
       this.productService.getOne(this.productId).subscribe((data) => {
-        this.product = {
+        this.productForm.patchValue({
           title: data.title,
           price: data.price,
           description: data.description,
           categoryId: data.category?.id || 1,
-          images: data.images,
-        };
+          image: data.images && data.images.length > 0 ? data.images[0] : '',
+        });
       });
     }
   }
 
   submitForm() {
+    if (this.productForm.invalid) {
+      return;
+    }
+
+    const formValue = this.productForm.value;
     const payload = {
-      title: this.product.title,
-      price: this.product.price,
-      description: this.product.description,
-      categoryId: this.product.categoryId,
-      images: this.product.images,
+      title: formValue.title,
+      price: formValue.price,
+      description: formValue.description,
+      categoryId: formValue.categoryId,
+      images: [formValue.image],
     };
 
     if (this.isEdit && this.productId) {
@@ -62,12 +72,8 @@ export class ProductFormComponent implements OnInit {
         this.router.navigate(['/']);
       });
     } else {
-      this.productService.create(payload).subscribe({
-        next: () => this.router.navigate(['/']),
-        error: (err) => {
-          console.error('Create failed', err);
-          alert('Failed to create product. Please check your input.');
-        },
+      this.productService.create(payload).subscribe(() => {
+        this.router.navigate(['/']);
       });
     }
   }

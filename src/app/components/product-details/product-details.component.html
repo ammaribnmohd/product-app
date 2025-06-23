@@ -7,4 +7,5 @@
     @for (img of product.images; track img) {
     <img [src]="img" class="img-thumbnail m-1" width="150">
     }
+    <button class="btn btn-success d-block mt-3" (click)="addToCart(product)">Add to Cart</button>
 </div>

@@ -1,27 +1,108 @@
 <div class="container mt-3">
-    <button class="btn btn-secondary mb-3" (click)="goBack()">← Back</button>
-    <h2>{{ isEdit ? 'Edit' : 'Create' }} Product</h2>
-    <form (ngSubmit)="submitForm()">
-        <div class="mb-3">
-            <label>Title</label>
-            <input type="text" class="form-control" [(ngModel)]="product.title" name="title" required>
-        </div>
-        <div class="mb-3">
-            <label>Price</label>
-            <input type="number" class="form-control" [(ngModel)]="product.price" name="price" required>
-        </div>
-        <div class="mb-3">
-            <label>Description</label>
-            <textarea class="form-control" [(ngModel)]="product.description" name="description" required></textarea>
-        </div>
-        <div class="mb-3">
-            <label>Category ID</label>
-            <input type="number" class="form-control" [(ngModel)]="product.categoryId" name="categoryId" required>
-        </div>
-        <div class="mb-3">
-            <label>Image URL</label>
-            <input type="text" class="form-control" [(ngModel)]="product.images[0]" name="image" required>
-        </div>
-        <button class="btn btn-success" type="submit">{{ isEdit ? 'Update' : 'Create' }}</button>
-    </form>
+  <button class="btn btn-secondary mb-3" (click)="goBack()">← Back</button>
+  <h2>{{ isEdit ? 'Edit' : 'Create' }} Product</h2>
+  <form [formGroup]="productForm" (ngSubmit)="submitForm()">
+    <!-- Title -->
+    <div class="mb-3">
+      <label for="title" class="form-label">Title</label>
+      <input
+        id="title"
+        type="text"
+        class="form-control"
+        formControlName="title"
+      />
+      <div
+        *ngIf="productForm.get('title')?.invalid && productForm.get('title')?.touched"
+        class="text-danger mt-1"
+      >
+        Title is required.
+      </div>
+    </div>
+
+    <!-- Price -->
+    <div class="mb-3">
+      <label for="price" class="form-label">Price</label>
+      <input
+        id="price"
+        type="number"
+        class="form-control"
+        formControlName="price"
+      />
+      <div
+        *ngIf="productForm.get('price')?.invalid && productForm.get('price')?.touched"
+        class="text-danger mt-1"
+      >
+        <span *ngIf="productForm.get('price')?.errors?.['required']">
+          Price is required.
+        </span>
+        <span *ngIf="productForm.get('price')?.errors?.['min']">
+          Price must be a positive number.
+        </span>
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <textarea
+        id="description"
+        class="form-control"
+        formControlName="description"
+      ></textarea>
+      <div
+        *ngIf="productForm.get('description')?.invalid && productForm.get('description')?.touched"
+        class="text-danger mt-1"
+      >
+        Description is required.
+      </div>
+    </div>
+
+    <!-- Category ID -->
+    <div class="mb-3">
+      <label for="categoryId" class="form-label">Category ID</label>
+      <input
+        id="categoryId"
+        type="number"
+        class="form-control"
+        formControlName="categoryId"
+      />
+      <div
+        *ngIf="productForm.get('categoryId')?.invalid && productForm.get('categoryId')?.touched"
+        class="text-danger mt-1"
+      >
+        Category ID is required.
+      </div>
+    </div>
+
+    <!-- Image URL -->
+    <div class="mb-3">
+      <label for="image" class="form-label">Image URL</label>
+      <input
+        id="image"
+        type="text"
+        class="form-control"
+        formControlName="image"
+      />
+      <div
+        *ngIf="productForm.get('image')?.invalid && productForm.get('image')?.touched"
+        class="text-danger mt-1"
+      >
+        <span *ngIf="productForm.get('image')?.errors?.['required']">
+          Image URL is required.
+        </span>
+        <span *ngIf="productForm.get('image')?.errors?.['pattern']">
+          Please enter a valid URL.
+        </span>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button
+      class="btn btn-success"
+      type="submit"
+      [disabled]="productForm.invalid"
+    >
+      {{ isEdit ? 'Update' : 'Create' }}
+    </button>
+  </form>
 </div>
