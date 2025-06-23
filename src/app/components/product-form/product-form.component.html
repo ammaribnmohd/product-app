@@ -57,23 +57,27 @@
       </div>
     </div>
 
-    <!-- Category ID -->
-    <div class="mb-3">
-      <label for="categoryId" class="form-label">Category ID</label>
-      <input
-        id="categoryId"
-        type="number"
-        class="form-control"
-        formControlName="categoryId"
-      />
-      <div
-        *ngIf="productForm.get('categoryId')?.invalid && productForm.get('categoryId')?.touched"
-        class="text-danger mt-1"
-      >
+<!-- Category ID -->
+<div class="mb-3">
+  <label for="categoryId" class="form-label">Category ID</label>
+  <input
+    id="categoryId"
+    type="number"
+    class="form-control"
+    formControlName="categoryId"  
+  />
+  <div
+    *ngIf="productForm.get('categoryId')?.invalid && productForm.get('categoryId')?.touched"
+    class="text-danger mt-1"
+  >
+    <span *ngIf="productForm.get('categoryId')?.errors?.['required']">
         Category ID is required.
-      </div>
-    </div>
-
+    </span>
+    <span *ngIf="productForm.get('categoryId')?.errors?.['min'] || productForm.get('categoryId')?.errors?.['max']">
+        Category ID must be between 1 and 5.
+    </span>
+  </div>
+</div>
     <!-- Image URL -->
     <div class="mb-3">
       <label for="image" class="form-label">Image URL</label>
